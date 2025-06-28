@@ -8,22 +8,6 @@
         "description": "Sunny "
     },
     {
-        "id": 5,
-        "name": "Garg Mahal",
-        "city": "Agra",
-        "category": "Fort",
-        "rating": 3.5,
-        "description": "Elegant and beautiful"
-    },
-    {
-        "id": 7,
-        "name": "Qutub Minar ",
-        "city": "Delhi",
-        "category": "Minar",
-        "rating": 3.2,
-        "description": "Huge and gigantic"
-    },
-    {
         "id": 8,
         "name": "Nandi hills",
         "city": "Mumbai",
@@ -46,5 +30,13 @@
         "category": "Waterfall",
         "rating": 4.8,
         "description": "Very scary place"
+    },
+    {
+        "id": 12,
+        "name": "Banrghatta national Park",
+        "city": "Hampi",
+        "category": "National Park",
+        "rating": 2.0,
+        "description": "Very vast national park with lot of wild animals"
     }
 ]
