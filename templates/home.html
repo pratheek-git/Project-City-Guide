@@ -3,7 +3,12 @@
 <head>
     <title>City Guide Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white text-center p-10">
     <nav class="bg-blue-600 text-white p-4 flex justify-between">
@@ -14,7 +19,26 @@
             <a href="/add-spot-form" class="hover:underline">Add Spot</a>
         </div>
     </nav>
-    <h1 class="text-4xl font-bold mt-10 mb-4">🌍 City Guide Tracker</h1>
-    <p class="mb-6 text-gray-700 dark:text-gray-300">Track and manage travel spots across different cities.</p>
+
+    <!-- Hero Section -->
+    <div class="mt-16">
+        <h1 class="text-4xl font-bold mb-4">🌍 City Guide Tracker</h1>
+        <p class="mb-10 text-gray-700 dark:text-gray-300">Track and manage travel spots across different cities.</p>
+
+        <!-- Animated Image Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 max-w-6xl mx-auto">
+            <img src="https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=800&q=80"
+                 alt="Taj Mahal"
+                 class="rounded-lg h-64 w-full object-cover shadow-lg animate-[float_6s_ease-in-out_infinite]" />
+
+            <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80"
+                 alt="Khalifa"
+                 class="rounded-lg h-64 w-full object-cover shadow-lg animate-[float_6s_ease-in-out_infinite] delay-150" />
+
+            <img src="https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                 alt="Nature Travel"
+                 class="rounded-lg h-64 w-full object-cover shadow-lg animate-[float_6s_ease-in-out_infinite] delay-300" />
+        </div>
+    </div>
 </body>
 </html>
