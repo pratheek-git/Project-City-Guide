@@ -11,6 +11,7 @@
             <a href="/" class="hover:underline">Home</a>
             <a href="/view-spots" class="hover:underline">Spots</a>
             <a href="/add-spot-form" class="hover:underline">Add Spot</a>
+             <a href="/spot-of-the-day" class="hover:underline font-semibold text-yellow-300">✨Spot of the Day</a>
         </div>
     </nav>
     <h1 class="text-2xl font-bold mb-6">📍 All Travel Spots</h1>
@@ -39,6 +40,7 @@
                 <a href="/spot/{{ spot.id }}" class="text-blue-500 hover:underline">View</a>
                 <a href="/edit-spot-form/{{ spot.id }}" class="text-yellow-500 hover:underline">Edit</a>
                 <a href="/delete-spot/{{ spot.id }}" onclick="return confirm('Are you sure?')" class="text-red-500 hover:underline">Delete</a>
+                
             </div>
         </div>
         {% endfor %}

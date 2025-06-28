@@ -3,22 +3,47 @@
 <head>
     <title>Spot Detail</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 dark:text-white p-10">
-    <nav class="bg-blue-600 text-white p-4 flex justify-between mb-6">
+<body class="bg-gradient-to-br from-blue-100 to-indigo-200 dark:from-gray-900 dark:to-gray-800 dark:text-white min-h-screen p-10 font-sans">
+
+    <nav class="bg-blue-600 text-white p-4 flex justify-between rounded shadow mb-8">
         <h1 class="font-bold text-xl">🌍 City Guide</h1>
         <div class="space-x-4">
             <a href="/" class="hover:underline">Home</a>
             <a href="/view-spots" class="hover:underline">Spots</a>
+             <a href="/spot-of-the-day" class="hover:underline font-semibold text-yellow-300">✨Spot of the Day</a>
         </div>
     </nav>
-    <h1 class="text-2xl font-bold">{{ spot.name }}</h1>
-    <p><strong>City:</strong> {{ spot.city }}</p>
-    <p><strong>Category:</strong> {{ spot.category }}</p>
-    <p><strong>Rating:</strong> ⭐ {{ spot.rating }}</p>
-    <p><strong>Description:</strong><br>{{ spot.description }}</p>
-    <br>
-    <a href="/view-spots" class="text-blue-500 hover:underline">⬅ Back to list</a>
+
+    <div class="max-w-3xl mx-auto bg-white dark:bg-gray-900 shadow-xl rounded-xl p-8 transition hover:scale-[1.01] duration-300">
+        <h1 class="text-4xl font-extrabold text-blue-700 dark:text-blue-300 mb-4 animate-fade-in">{{ spot.name }}</h1>
+
+        <div class="text-lg space-y-3">
+            <p class="text-gray-700 dark:text-gray-300"><strong>📍 City:</strong> {{ spot.city }}</p>
+            <p class="text-gray-700 dark:text-gray-300"><strong>🏷️ Category:</strong> {{ spot.category }}</p>
+            <p class="text-yellow-500 font-semibold"><strong>⭐ Rating:</strong> {{ spot.rating }}</p>
+            <p class="text-gray-800 dark:text-gray-200 leading-relaxed"><strong>📝 Description:</strong><br>{{ spot.description }}</p>
+        </div>
+
+        <div class="mt-6">
+            <a href="/view-spots"
+               class="inline-block bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition duration-200">
+                ⬅ Back to list
+            </a>
+        </div>
+    </div>
+
+    <style>
+        /* Simple fade animation */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.6s ease-out both;
+        }
+    </style>
+
 </body>
 </html>

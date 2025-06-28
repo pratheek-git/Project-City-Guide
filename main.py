@@ -9,12 +9,11 @@ from pydantic import BaseModel
 from typing import Optional
 from users_routes import router as user_router
 import json, os
+import random 
 
 app = FastAPI()
 app.include_router(user_router)
 templates = Jinja2Templates(directory="templates")
-
-
 
 
 DATA_FILE = "data.json"
@@ -129,3 +128,23 @@ def delete_spot_from_ui(id: int):
         raise HTTPException(status_code=404, detail="Spot not found")
     save_spots(spots)
     return RedirectResponse(url="/view-spots", status_code=302)
+
+
+
+
+@app.get("/spot-of-the-day", response_class=HTMLResponse)
+def spot_of_the_day(request: Request):
+    try:
+        with open("data.json", "r") as f:
+            spots = json.load(f)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="No spots data file found")
+
+    if not spots:
+        raise HTTPException(status_code=404, detail="No spots available")
+
+    selected_spot = random.choice(spots)
+    return templates.TemplateResponse("spot_of_the_day.html", {
+        "request": request,
+        "spot": selected_spot
+    })

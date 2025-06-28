@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spot of the Day</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white min-h-screen p-10">
+    <nav class="bg-blue-600 text-white p-4 flex justify-between mb-6 rounded">
+        <h1 class="font-bold text-xl">🌍 City Guide</h1>
+        <div class="space-x-4">
+            <a href="/" class="hover:underline">Home</a>
+            <a href="/view-spots" class="hover:underline">Spots</a>
+            <a href="/add-spot-form" class="hover:underline">Add Spot</a>
+             <a href="/spot-of-the-day" class="hover:underline font-semibold text-yellow-300">✨Spot of the Day</a>
+        </div>
+    </nav>
+
+    <div class="text-center">
+        <h1 class="text-4xl font-bold mb-6 text-blue-400">🎯 Spot of the Day</h1>
+        <div class="bg-gray-800 rounded-lg shadow-lg p-8 inline-block text-left max-w-xl mx-auto">
+            <h2 class="text-3xl font-bold text-pink-400 mb-3">{{ spot.name }}</h2>
+            <p class="mb-2 text-gray-300">📍 <span class="font-medium text-white">{{ spot.city }}</span> | 🏷️ <span class="text-green-300">{{ spot.category }}</span></p>
+            <p class="mb-2 text-yellow-400">⭐ <span class="text-white">{{ spot.rating }}</span></p>
+            <p class="text-gray-200 italic">{{ spot.description }}</p>
+        </div>
+    </div>
+</body>
+</html>
