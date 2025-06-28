@@ -1,26 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Edit Spot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 dark:text-white p-10">
-    <nav class="bg-blue-600 text-white p-4 flex justify-between mb-6">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen p-8">
+    <nav class="bg-blue-600 text-white p-4 flex justify-between mb-8 rounded">
         <h1 class="font-bold text-xl">🌍 City Guide</h1>
         <div class="space-x-4">
             <a href="/" class="hover:underline">Home</a>
             <a href="/view-spots" class="hover:underline">Spots</a>
+            <a href="/add-spot-form" class="hover:underline">Add Spot</a>
         </div>
     </nav>
-    <h2 class="text-xl font-bold mb-4">Edit Spot</h2>
-    <form action="/edit-spot/{{ spot.id }}" method="post" class="space-y-4 max-w-md">
-        <input name="name" value="{{ spot.name }}" class="border p-2 rounded w-full" required>
-        <input name="city" value="{{ spot.city }}" class="border p-2 rounded w-full" required>
-        <input name="category" value="{{ spot.category }}" class="border p-2 rounded w-full" required>
-        <input name="rating" type="number" step="0.1" min="0" max="5" value="{{ spot.rating }}" class="border p-2 rounded w-full" required>
-        <textarea name="description" class="border p-2 rounded w-full">{{ spot.description }}</textarea>
-        <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Update</button>
-    </form>
+
+    <div class="max-w-lg mx-auto bg-white dark:bg-gray-800 p-6 rounded shadow">
+        <h2 class="text-2xl font-bold mb-6">✏️ Edit Spot</h2>
+        <form action="/edit-spot/{{ spot.id }}" method="post" class="space-y-4">
+            <input name="name" value="{{ spot.name }}"
+                class="w-full p-2 rounded border bg-white dark:bg-gray-700 dark:text-white" required>
+
+            <input name="city" value="{{ spot.city }}"
+                class="w-full p-2 rounded border bg-white dark:bg-gray-700 dark:text-white" required>
+
+            <input name="category" value="{{ spot.category }}"
+                class="w-full p-2 rounded border bg-white dark:bg-gray-700 dark:text-white" required>
+
+            <input name="rating" type="number" step="0.1" min="0" max="5" value="{{ spot.rating }}"
+                class="w-full p-2 rounded border bg-white dark:bg-gray-700 dark:text-white" required>
+
+            <textarea name="description"
+                class="w-full p-2 rounded border bg-white dark:bg-gray-700 dark:text-white"
+                rows="4">{{ spot.description }}</textarea>
+
+            <button type="submit"
+                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded w-full">Update Spot</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -9,19 +9,11 @@
     },
     {
         "id": 5,
-        "name": "Taj Mahal",
+        "name": "Garg Mahal",
         "city": "Agra",
         "category": "Fort",
         "rating": 3.5,
         "description": "Elegant and beautiful"
-    },
-    {
-        "id": 6,
-        "name": "Coorg",
-        "city": "Madikeri",
-        "category": "Hill Station",
-        "rating": 4.2,
-        "description": "Peacefull and too cold "
     },
     {
         "id": 7,
@@ -46,5 +38,13 @@
         "category": "Beach",
         "rating": 3.0,
         "description": ""
+    },
+    {
+        "id": 11,
+        "name": "Arbi falls",
+        "city": "Manipal",
+        "category": "Waterfall",
+        "rating": 4.8,
+        "description": "Very scary place"
     }
 ]
