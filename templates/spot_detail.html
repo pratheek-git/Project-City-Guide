@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spot Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white p-10">
+    <nav class="bg-blue-600 text-white p-4 flex justify-between mb-6">
+        <h1 class="font-bold text-xl">🌍 City Guide</h1>
+        <div class="space-x-4">
+            <a href="/" class="hover:underline">Home</a>
+            <a href="/view-spots" class="hover:underline">Spots</a>
+        </div>
+    </nav>
+    <h1 class="text-2xl font-bold">{{ spot.name }}</h1>
+    <p><strong>City:</strong> {{ spot.city }}</p>
+    <p><strong>Category:</strong> {{ spot.category }}</p>
+    <p><strong>Rating:</strong> ⭐ {{ spot.rating }}</p>
+    <p><strong>Description:</strong><br>{{ spot.description }}</p>
+    <br>
+    <a href="/view-spots" class="text-blue-500 hover:underline">⬅ Back to list</a>
+</body>
+</html>

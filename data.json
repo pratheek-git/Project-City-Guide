@@ -1,0 +1,50 @@
+[
+    {
+        "id": 4,
+        "name": "Beach paradise",
+        "city": "Goa",
+        "category": "Beach",
+        "rating": 4.0,
+        "description": "Sunny "
+    },
+    {
+        "id": 5,
+        "name": "Taj Mahal",
+        "city": "Agra",
+        "category": "Fort",
+        "rating": 3.5,
+        "description": "Elegant and beautiful"
+    },
+    {
+        "id": 6,
+        "name": "Coorg",
+        "city": "Madikeri",
+        "category": "Hill Station",
+        "rating": 4.2,
+        "description": "Peacefull and too cold "
+    },
+    {
+        "id": 7,
+        "name": "Qutub Minar ",
+        "city": "Delhi",
+        "category": "Minar",
+        "rating": 3.2,
+        "description": "Huge and gigantic"
+    },
+    {
+        "id": 8,
+        "name": "Nandi hills",
+        "city": "Mumbai",
+        "category": "Hill",
+        "rating": 4.4,
+        "description": ""
+    },
+    {
+        "id": 9,
+        "name": "TimTim beach",
+        "city": "Goa",
+        "category": "Beach",
+        "rating": 3.0,
+        "description": ""
+    }
+]
