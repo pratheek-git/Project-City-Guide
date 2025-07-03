@@ -1,42 +1,25 @@
 from fastapi import FastAPI, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-
-from fastapi import Request, Query
-from fastapi.responses import HTMLResponse
-
-from pydantic import BaseModel
-from typing import Optional
+from fastapi import Query
+from sqlalchemy.orm import Session
+from models import Spot
+from db import SessionLocal, engine, Base
 from users_routes import router as user_router
-import json, os
-import random 
+import random
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.include_router(user_router)
 templates = Jinja2Templates(directory="templates")
 
-
-DATA_FILE = "data.json"
-
-def load_spots():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            return json.load(f)
-    return []
-
-def save_spots(spots):
-    with open(DATA_FILE, "w") as f:
-        json.dump(spots, f, indent=4)
-
-spots = load_spots()
-current_id = max([s["id"] for s in spots], default=0) + 1
-
-class Spot(BaseModel):
-    name: str
-    city: str
-    category: str
-    rating: float
-    description: Optional[str] = ""
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 @app.get("/", response_class=HTMLResponse)
 def homepage(request: Request):
@@ -55,94 +38,80 @@ def handle_add_form(
     rating: float = Form(...),
     description: str = Form("")
 ):
-    global current_id
-    new_spot = {
-        "id": current_id,
-        "name": name,
-        "city": city,
-        "category": category,
-        "rating": rating,
-        "description": description
-    }
-    spots.append(new_spot)
-    current_id += 1
-    save_spots(spots)
+    db = next(get_db())
+    new_spot = Spot(name=name, city=city, category=category, rating=rating, description=description)
+    db.add(new_spot)
+    db.commit()
     return RedirectResponse(url="/view-spots", status_code=302)
-
-
-
 
 @app.get("/view-spots", response_class=HTMLResponse)
 def view_spots(request: Request, q: str = Query("", description="Search by city or category")):
+    db = next(get_db())
     if q:
-        filtered_spots = [s for s in spots if q.lower() in s["city"].lower() or q.lower() in s["category"].lower()]
+        spots = db.query(Spot).filter(
+            (Spot.city.ilike(f"%{q}%")) | (Spot.category.ilike(f"%{q}%"))
+        ).all()
     else:
-        filtered_spots = spots
-
-    return templates.TemplateResponse("index.html", {"request": request, "spots": filtered_spots})
-
+        spots = db.query(Spot).all()
+    return templates.TemplateResponse("index.html", {"request": request, "spots": spots})
 
 @app.get("/spots")
-def list_spots(city: Optional[str] = None, category: Optional[str] = None):
-    filtered = spots
+def list_spots(city: str = None, category: str = None):
+    db = next(get_db())
+    query = db.query(Spot)
     if city:
-        filtered = [s for s in filtered if s["city"].lower() == city.lower()]
+        query = query.filter(Spot.city.ilike(city))
     if category:
-        filtered = [s for s in filtered if s["category"].lower() == category.lower()]
-    return filtered
+        query = query.filter(Spot.category.ilike(category))
+    return query.all()
 
 @app.get("/spot/{id}", response_class=HTMLResponse)
 def view_spot_detail(request: Request, id: int):
-    for s in spots:
-        if s["id"] == id:
-            return templates.TemplateResponse("spot_detail.html", {"request": request, "spot": s})
-    raise HTTPException(status_code=404, detail="Spot not found")
+    db = next(get_db())
+    spot = db.query(Spot).filter(Spot.id == id).first()
+    if not spot:
+        raise HTTPException(status_code=404, detail="Spot not found")
+    return templates.TemplateResponse("spot_detail.html", {"request": request, "spot": spot})
 
 @app.get("/edit-spot-form/{id}", response_class=HTMLResponse)
 def edit_spot_form(request: Request, id: int):
-    for spot in spots:
-        if spot["id"] == id:
-            return templates.TemplateResponse("edit_spot.html", {"request": request, "spot": spot})
-    raise HTTPException(status_code=404, detail="Spot not found")
+    db = next(get_db())
+    spot = db.query(Spot).filter(Spot.id == id).first()
+    if not spot:
+        raise HTTPException(status_code=404, detail="Spot not found")
+    return templates.TemplateResponse("edit_spot.html", {"request": request, "spot": spot})
 
 @app.post("/edit-spot/{id}")
 def edit_spot(id: int, name: str = Form(...), city: str = Form(...),
               category: str = Form(...), rating: float = Form(...), description: str = Form("")):
-    for spot in spots:
-        if spot["id"] == id:
-            spot["name"] = name
-            spot["city"] = city
-            spot["category"] = category
-            spot["rating"] = rating
-            spot["description"] = description
-            save_spots(spots)
-            return RedirectResponse(url="/view-spots", status_code=302)
-    raise HTTPException(status_code=404, detail="Spot not found")
+    db = next(get_db())
+    spot = db.query(Spot).filter(Spot.id == id).first()
+    if not spot:
+        raise HTTPException(status_code=404, detail="Spot not found")
+    spot.name = name
+    spot.city = city
+    spot.category = category
+    spot.rating = rating
+    spot.description = description
+    db.commit()
+    return RedirectResponse(url="/view-spots", status_code=302)
 
 @app.get("/delete-spot/{id}")
 def delete_spot_from_ui(id: int):
-    global spots
-    before = len(spots)
-    spots = [s for s in spots if s["id"] != id]
-    if len(spots) == before:
+    db = next(get_db())
+    spot = db.query(Spot).filter(Spot.id == id).first()
+    if not spot:
         raise HTTPException(status_code=404, detail="Spot not found")
-    save_spots(spots)
+    db.delete(spot)
+    db.commit()
     return RedirectResponse(url="/view-spots", status_code=302)
-
-
-
 
 @app.get("/spot-of-the-day", response_class=HTMLResponse)
 def spot_of_the_day(request: Request):
-    try:
-        with open("data.json", "r") as f:
-            spots = json.load(f)
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="No spots data file found")
-
+    db = next(get_db())
+    spots = db.query(Spot).all()
     if not spots:
         raise HTTPException(status_code=404, detail="No spots available")
-
     selected_spot = random.choice(spots)
     return templates.TemplateResponse("spot_of_the_day.html", {
         "request": request,

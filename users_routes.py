@@ -1,72 +1,64 @@
 from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-import json
+from sqlalchemy.orm import Session
+from db import SessionLocal
+from models import User
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
-USERS_FILE = "users.json"
 
-# Load users from file
-def load_users():
+def get_db():
+    db = SessionLocal()
     try:
-        with open(USERS_FILE, "r") as f:
-            return json.load(f)
-    except:
-        return []
+        yield db
+    finally:
+        db.close()
 
-# Save users to file
-def save_users(users):
-    with open(USERS_FILE, "w") as f:
-        json.dump(users, f, indent=2)
-
-# -------------------------------
 # Signup - GET
-# -------------------------------
 @router.get("/signup", response_class=HTMLResponse)
 def signup_form(request: Request):
     return templates.TemplateResponse("signup.html", {"request": request, "message": None})
 
-# -------------------------------
 # Signup - POST
-# -------------------------------
 @router.post("/signup")
 def signup(request: Request, username: str = Form(...), password: str = Form(...)):
-    users = load_users()
+    db = next(get_db())
 
-    if any(u["username"] == username for u in users):
+    # Check if user already exists
+    existing_user = db.query(User).filter(User.username == username).first()
+    if existing_user:
         return templates.TemplateResponse("signup.html", {
             "request": request,
             "message": "Username already exists!"
         })
 
-    users.append({"username": username, "password": password})
-    save_users(users)
+    # Create new user
+    new_user = User(username=username, password=password)
+    db.add(new_user)
+    db.commit()
 
-    return templates.TemplateResponse("signup.html", {
-        "request": request,
-        "message": "Account created successfully!"
-    })
+    return RedirectResponse(url="/", status_code=302)
 
-# -------------------------------
 # Login - GET
-# -------------------------------
 @router.get("/login", response_class=HTMLResponse)
 def login_form(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request, "error": None})
+    return templates.TemplateResponse("login.html", {"request": request, "message": None})
 
-# -------------------------------
 # Login - POST
-# -------------------------------
 @router.post("/login")
 def login(request: Request, username: str = Form(...), password: str = Form(...)):
-    users = load_users()
-    user = next((u for u in users if u["username"] == username and u["password"] == password), None)
+    db = next(get_db())
+    user = db.query(User).filter(User.username == username, User.password == password).first()
 
-    if user:
-        return RedirectResponse(url="/", status_code=302)
-    else:
+    if not user:
         return templates.TemplateResponse("login.html", {
             "request": request,
-            "error": "Invalid credentials"
+            "message": "Invalid username or password!"
         })
+
+    return templates.TemplateResponse("home.html", {
+        "request": request,
+        "message": f"Welcome back, {username}!"
+    })
+
